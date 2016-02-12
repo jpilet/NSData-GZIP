@@ -49,7 +49,7 @@ public extension NSData
 
         if status != Z_OK {
             if let errorMessage = String.fromCString(stream.msg) {
-                println(String(format: "Compression failed: %@", errorMessage))
+                print(String(format: "Compression failed: %@", errorMessage))
             }
             
             return nil
@@ -88,13 +88,13 @@ public extension NSData
         
         if status != Z_OK {
             if let errorMessage = String.fromCString(stream.msg) {
-                println(String(format: "Decompression failed: %@", errorMessage))
+                print(String(format: "Decompression failed: %@", errorMessage))
             }
             return nil
         }
         
-        var data = NSMutableData(length: self.length * 2)!
-        do {
+        let data = NSMutableData(length: self.length * 2)!
+        repeat {
             if Int(stream.total_out) >= data.length {
                 data.length += self.length / 2;
             }
@@ -107,7 +107,7 @@ public extension NSData
         
         if inflateEnd(&stream) != Z_OK || status != Z_STREAM_END {
             if let errorMessage = String.fromCString(stream.msg) {
-                println(String(format: "Decompression failed: %@", errorMessage))
+                print("Decompression failed: \(errorMessage)")
             }
             return nil
         }
